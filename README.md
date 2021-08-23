@@ -28,6 +28,5 @@ pytorch==1.7.0
   `MSRVTT/pyramid/TemporalFeatures/video1/Features.pkl`  
   `...`  
   
-
 # train and test
-run `python train.py` in your terminal.
+run `python train.py` in your terminal.  some trained models will be upload...
