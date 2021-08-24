@@ -1,5 +1,5 @@
-# I-aRPT for VideoQA
-This is the PyTorch Implementation of our paper "[Interaction-aware Residual Pyramid Transformer for Video Question Answering](https:)".
+# TPT for VideoQA
+This is the PyTorch Implementation of our paper "[Temporal Pyramid Transformer with Multimodal Interaction forVideo Question Answering](https:)".
 
 ![alt text](docs/fig2.png 'overview of the network')
 
