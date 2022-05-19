@@ -26,12 +26,11 @@ def load_vocab_glove_matrix(vocab_path, glovept_path):
 
 
 class VideoQADataset(Dataset):
-    def __init__(self, question_type, glovept_path, level, visual_m_path, visual_s_path, transform=None):
+    def __init__(self, question_type, glovept_path, level, visual_sm_path, transform=None):
         self.question_type = question_type
         self.glovept_path = glovept_path
         self.levels = np.power(2,level)-1
-        self.visual_m_path = visual_m_path
-        self.visual_s_path = visual_s_path
+        self.visual_sm_path = visual_sm_path
         #load glovefile
         with open(glovept_path, 'rb') as f:
             obj = pickle.load(f)
@@ -49,12 +48,9 @@ class VideoQADataset(Dataset):
                 self.ans_candidates_len = torch.from_numpy(np.array(obj['ans_candidates_len'])).type(torch.LongTensor)
             
     def __getitem__(self, idx):
-        with open(os.path.join(self.visual_m_path,self.video_names[idx],'Features.pkl'), 'rb') as fp:
+        with open(os.path.join(self.visual_sm_path,self.video_names[idx],'Features.pkl'), 'rb') as fp:
             temp = pickle.load(fp)
-        visual_m = torch.from_numpy(temp['Features']).type(torch.FloatTensor)[0:self.levels]#shape: self.levels,2048
-        with open(os.path.join(self.visual_s_path,self.video_names[idx],'Features.pkl'), 'rb') as fp:
-            temp = pickle.load(fp)
-        visual_s = torch.from_numpy(temp['Features']).type(torch.FloatTensor)[0:self.levels]#shape: self.levels,16,2048
+        visual_sm = torch.from_numpy(temp['Features']).type(torch.FloatTensor)[0:self.levels]#shape: self.levels,16+1,2048
         question = self.questions[idx]
         question_len = self.questions_len[idx]
         ans_candidates = torch.zeros(5).long()
@@ -63,7 +59,7 @@ class VideoQADataset(Dataset):
         if self.question_type not in ['none', 'frameqa', 'count']:
             ans_candidates = self.ans_candidates[idx]
             ans_candidates_len = self.ans_candidates_len[idx]
-        return visual_m, visual_s, question, question_len, ans_candidates, ans_candidates_len, answer
+        return visual_sm, question, question_len, ans_candidates, ans_candidates_len, answer
 
     def __len__(self):
         return self.questions.shape[0]
